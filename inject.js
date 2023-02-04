@@ -1577,7 +1577,8 @@ function snuDoubleClickToShowFieldOrReload() {
 
                 var val = g_form.getValue(elm);
                 if (NOW.user.roles.split(',').includes('admin') || snuImpersonater(document)) { //only allow admin to change fields
-                    var newValue = prompt('[SN Utils]\nField Type: ' + glideUIElement.type + '\nField: ' + elm + '\nValue:', val);
+                    //var newValue = prompt('[SN Utils]\nField Type: ' + glideUIElement.type + '\nField: ' + elm + '\nValue:', val);
+                    var newValue = showHTMLDialogModalWithForm(g_form, elm);
                     if (newValue !== null)
                         g_form.setValue(elm, newValue);
                 } else {
@@ -1605,6 +1606,42 @@ function snuDoubleClickToShowFieldOrReload() {
         }, true);
     }
 }
+
+
+function showHTMLDialogModalWithForm(g_form, element) {
+    const uiElement = g_form.getGlideUIElement(element);
+    const mandatory = uiElement.mandatory;
+    const readOnly = false;
+    const value = g_form.getValue(element);
+    const info = '[SN Utils]\nField Type: ' + uiElement.type + '\nField: ' + element + '\nValue:' + value;
+    const htmlForm = `
+        <div>
+            <p>Field Type: ${uiElement.type}</p>
+            <p>Field: ${element}</p>
+            <p>
+            <label for="value">Value:
+                <input id="value" type="text" value="${value}">
+            </label>
+            </p>
+            <div>
+                <label for="mandatory">Mandatory:<input id="mandatory" type="checkbox" value="${mandatory}"></label>
+                <label for="readonly">Read-Only:<input id="mandatory" type="checkbox" value="${readOnly}"></label>
+            </div>
+        </div>
+    `;
+    let returnValue = null;
+    const dialog = new Dialog();
+    dialog.open({
+        accept: 'Save',
+        dialogClass: 'custom',
+        message: '[SN Utils] Field Information',
+        template: htmlForm
+      })
+      dialog.waitForUser().then((res) => {  returnValue = res; });    
+    return returnValue;
+
+}
+
 
 //current only implementation is doubleclick label to edit condition field, or open condition in list with CTRL/CMD
 function flowDesignerDoubleClick() {
@@ -4634,5 +4671,3 @@ function snuSlashLog(addValue = false) {
     }
     return slashLog;
 }
-
-

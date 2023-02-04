@@ -29,6 +29,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     chrome.runtime.sendMessage(msg, isServiceNow => {
         if (isServiceNow) {
             addScript('/js/purify.min.js', false); //needed for safe html insertion required by FF
+            addScript('/js/dialog.js', false); 
             addScript('inject.js', true);
         
             if (location.pathname.startsWith("/now/") || location.pathname.startsWith("/x/"))

@@ -98,8 +98,11 @@ class SnuNextManager {
                         spn.style = 'display:none';
                         spn.className = 'snutn snuelm'
                         spn.innerHTML = `<span class='snuwrapper snuelm'>&nbsp;| ${tmplt} </span><span class='snuelement snuelm'>
-                        <a class='snuelm' href='javascript:snuNextManager.labelClick("${frm.componentId}","${elm.name}")'>${elm.name}</a></span>`;
+                        <a class='snuelm' href='javascript:'>${elm.name}</a></span>`;
                         lbl.append(spn)
+                        lbl.querySelector('.snuelm').addEventListener('click', e => {
+                            snuNextManager.labelClick(frm.componentId,elm.name, frm.nowRecordFormBlob.gForm);
+                        });
                         lbl.classList.add("snutnwrap");
                         namesAdded++;
                     }
@@ -257,10 +260,11 @@ class SnuNextManager {
 
     }
 
-    labelClick(componentId, fieldName) {
+    labelClick(componentId, fieldName, gForm) {
         alert(`[SN Utils] You clicked label: ${fieldName} \nthis still needs to be implemented`)
         console.log(componentId);
         console.log(fieldName);
+        gForm.setValue(fieldName, 'test');
     }
 
 
